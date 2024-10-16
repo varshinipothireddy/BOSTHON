@@ -1,0 +1,293 @@
+import pyttsx3 as p
+import time
+from datetime import datetime
+from datetime import date
+import speech_recognition as sr
+import smtplib
+from email import message
+import calendar
+import random
+import pywhatkit as pw
+import wikipedia
+import webbrowser
+import subprocess
+import os
+def wish():
+ now=datetime.now()
+ if 0<=now.hour<12:
+ speak("Good Morning")
+ elif 12<=now.hour<16:
+ speak("Good Afternoon")
+ 
+else:
+ speak("Good Evening")
+ speak("I am Boston")
+ 
+speak("How can I help you")
+ 
+def audio_():
+ r=sr.Recognizer()
+with sr.Microphone() as source:
+ r.adjust_for_ambient_noise(source)
+ try:
+ read=r.listen(source,timeout=2)
+ audio=r.recognize_google(read,language="en-in")
+ print(audio)
+ return audio.lower()
+ except:
+ return "None"
+ 
+def speak(audio):
+ c=p.init()
+ c.setProperty("rate",175)
+ c.say(audio)
+ print(audio)
+ c.runAndWait()
+ 
+def calculate(num1,operator,num2):
+ num1=int(num1)
+ num2=int(num2)
+ output=0
+ if operator=="+" or operator=="plus":
+ output=num1+num2
+ if operator=="-" or operator=="minus":
+ output=num1-num2
+ if operator=="into" or operator=="x":
+ output=num1*num2
+ if operator=="by" or operator=="/":
+ output=num1/num2
+ if operator=="power":
+ output=num1**num2
+ return str(output)
+def mail():
+speak("To whom should I send the mail")
+ name=audio_()
+ 
+mail_list={"jayant":"chowdaryjayanth143@gmail.com","hemant":"himanthreddylhr@gmail.com","si
+ri":"sireesha.career16@gmail.com",
+ "naveen":"thollanaveen2001@gmail.com","lokesh":"tallurulokesh17@gmail.com"}
+ if name in mail_list:
+ mail_id=mail_list[name]
+ speak("What is the subject of the mail")
+ sub=audio_()
+ speak("What is the body of the mail")
+ body=audio_()
+ try:
+ from_address="bostonassitant@gmail.com"
+ to_address=mail_id
+ msg=message.EmailMessage()
+ msg.add_header('from',from_address)
+ msg.add_header('to',to_address)
+ msg.add_header('subject',sub)
+ msg.set_payload(body)
+ with smtplib.SMTP("smtp.gmail.com",587) as server:
+ server.ehlo()
+ server.starttls()
+ server.ehlo()
+ server.login(from_address,"Boss@123isback")
+ server.sendmail(from_addr=from_address,to_addrs=to_address,msg=msg.as_string())
+ print(msg)
+ speak("Mail sent")
+ except:
+ speak("Sorry, couldn't send the mail")
+ else:
+ speak("Sorry I don't have {} in my mail id list".format(name))
+ 
+def music()
+dct={1:"https://youtu.be/OsU0CGZoV8E",2:"https://youtu.be/R4He_Gcn7cA",3:"https://youtu.be/qiu
+qCBCgNRU",
+ 
+4:"https://youtu.be/xUe3eR0n380",5:"https://youtu.be/dtZ14XTwwos",6:"https://youtu.be/9n1refHex
+DY"}
+ n=random.randint(1,6)
+ url=dct[n]
+ pw.playonyt(url)
+ time.sleep(25)
+ 
+def digit(audio):
+ aud=audio.split(" ")
+ try:
+ if aud[3]=="binary":
+ temp=list(bin(int(aud[1])))
+ temp1=temp[2:]
+ k=' '.join(temp1) 
+ speak("It's "+k)
+ elif aud[3]=="octal":
+ temp=list(oct(int(aud[1])))
+ temp1=temp[2:]
+ k=' '.join(temp1) 
+ speak("It's "+k)
+ elif aud[3]=="hexadecimal":
+ temp=list(hex(int(aud[1])))
+ temp1=temp[2:]
+ k=' '.join(temp1) 
+ speak("It's "+k)
+ except:
+ speak("Unknown error occured")
+ 
+def length(audio):
+ try:
+aud=audio.split(" ")
+ if aud[2]=="centimetre" or aud[2]=="centimetres" or aud[2]=="cm":
+ if aud[4]=="meter" or aud[4]=="metres" or aud[4]=="m":
+ speak("It's "+str(int(aud[1])/100)+" metres")
+ elif aud[4]=="inch" or aud[4]=="inches":
+ speak("It's "+str(int(aud[1])/2.54)+" inches")
+ elif aud[4]=="kilometre" or aud[4]=="kilometres" or aud[4]=="km":
+ speak("It's "+str(int(aud[1])/100000)+" kilometres")
+ elif aud[4]=="millimetre" or aud[4]=="millimetres" or aud[4]=="mm":
+ speak("It's "+str(int(aud[1])*10)+" millimetres")
+ elif aud[2]=="metre" or aud[2]=="metres" or aud[2]=="m":
+ if aud[4]=="centimetre" or aud[4]=="centimetres" or aud[4]=="cm":
+ speak("It's "+str(int(aud[1])*100)+" centimetres")
+ elif aud[4]=="inch" or aud[4]=="inches":
+ speak("It's "+str((int(aud[1])*100)/2.54)+" inches")
+ elif aud[4]=="kilometre" or aud[4]=="kilometres" or aud[4]=="km":
+ speak("It's "+str(int(aud[1])/1000)+" kilometres")
+ elif aud[4]=="millimetre" or aud[4]=="millimetres" or aud[4]=="mm":
+ speak("It's "+str(int(aud[1])*1000)+" millimetres")
+ elif aud[2]=="inch" or aud[2]=="inches":
+ if aud[4]=="meter" or aud[4]=="metres" or aud[4]=="m":
+ speak("It's "+str((int(aud[1])*2.54)/100)+" metres")
+ elif aud[4]=="centimetre" or aud[4]=="centimetres" or aud[4]=="cm":
+ speak("It's "+str(int(aud[1])*2.54)+" centimetres")
+ elif aud[4]=="kilometre" or aud[4]=="kilometres" or aud[4]=="km":
+ speak("It's "+str((int(aud[1])*2.54)/100000)+" kilometres")
+ elif aud[4]=="millimetre" or aud[4]=="millimetres" or aud[4]=="mm":
+ speak("It's "+str(int(aud[1])*10*2.54)+" millimetres")
+ elif aud[2]=="kilometre" or aud[2]=="kilometres" or aud[2]=="km":
+ if aud[4]=="meter" or aud[4]=="metres" or aud[4]=="m":
+ speak("It's "+str(int(aud[1])*1000)+" metres")
+ elif aud[4]=="inch" or aud[4]=="inches":
+ speak("It's "+str((int(aud[1])*100000)/2.54)+" inches")
+ elif aud[4]=="centimetre" or aud[4]=="centimetres" or aud[4]=="cm":
+speak("It's "+str(int(aud[1])*100000)+" kilometres")
+ elif aud[4]=="millimetre" or aud[4]=="millimetres" or aud[4]=="mm":
+ speak("It's "+str(int(aud[1])*1000000)+" millimetres")
+ elif aud[2]=="millimetre" or aud[2]=="millimetres" or aud[2]=="mm":
+ if aud[4]=="meter" or aud[4]=="metres" or aud[4]=="m":
+ speak("It's "+str(int(aud[1])/1000)+" metres")
+ elif aud[4]=="inch" or aud[4]=="inches":
+ speak("It's "+str(int(aud[1])/25.4)+" inches")
+ elif aud[4]=="kilometre" or aud[4]=="kilometres" or aud[4]=="km":
+ speak("It's "+str(int(aud[1])/1000000)+" kilometres")
+ elif aud[4]=="centimetre" or aud[4]=="centimetres" or aud[4]=="cm":
+ speak("It's "+str(int(aud[1])/10)+" centimetres")
+ except:
+ speak("Unknown error occured")
+ 
+def version():
+ while 1:
+ audio_new=audio_()
+ if audio_new!="None":
+ if respond_two(audio_new)=="exit":
+ break
+ 
+def respond_two(audio):
+ if "name" in audio:
+ speak("How could you forget me")
+ if "day" in audio:
+ speak("I am sorry to say that you are such a dumb not even remembering the day")
+ if "date" in audio:
+ speak("It's terrible to see you in such position")
+ if "mail" in audio:
+ speak("Why can't you go and type by yourself")
+ if "song" in audio:
+ speak("No!, you forgot my name. Ask someone else you remember to do the job.")speak("I am done with your greetings. Don't dare to do it!")
+ if "exit" in audio:
+ speak("Think before activating my version 2.0")
+ speak("Shifted to the actual version")
+ return "exit"
+ 
+def respond(audio):
+ if "hello" in audio:
+ speak("Hello sir")
+ speak("How can I help you")
+ elif "name" in audio:
+ speak("I am Boston")
+ elif "calculate" in audio.lower():
+ cal=audio.split(" ")
+ try:
+ output=calculate(cal[1],cal[2],cal[3])
+ speak("It's {}".format(output))
+ except:
+ speak("Invalid format")
+ elif "send mail" in audio:
+ mail()
+ elif "time" in audio:
+ now=datetime.now()
+ speak("Its "+str(now.hour)+" hour "+str(now.minute)+" minutes")
+ elif "date" in audio:
+ dt=date.today()
+ speak("It's {}".format(str(dt.strftime("%B %d %Y"))))
+ elif "day" in audio:
+ dt=date.today()
+ if "today" in audio:
+ speak("It's {}".format(str(calendar.day_name[dt.weekday()])))
+ if "tomorrow" in audio:
+ speak("It's {}".format(str(calendar.day_name[dt.weekday()+1])))
+ if "yesterday" in audio:
+
+if dt.weekday()==0:
+ speak("It's Sunday")
+ else:
+ speak("It's {}".format(str(calendar.day_name[dt.weekday()-1])))
+ elif "song" in audio:
+ music()
+ elif "version" in audio:
+ speak("Are you sure boss!")
+ audio_new=audio_()
+ if audio_new=="yes" or audio_new=="s":
+ speak("Shifted to version 2.0")
+ version()
+ elif "who" in audio:
+ speak("searching on wikipedia...")
+ audio=audio.replace("who","")
+ audio=audio.replace("is","")
+ try:
+ results = wikipedia.summary(audio, sentences=3)
+ speak("According to Wikipedia")
+ speak(results)
+ except:
+ speak("Sorry I Couldn't find it on wikipedia")
+ elif 'open youtube' in audio:
+ webbrowser.open_new_tab("https://www.youtube.com")
+ speak("youtube is open now")
+ time.sleep(5)
+ elif 'open google' in audio:
+ webbrowser.open_new_tab("https://www.google.com")
+ speak("Google chrome is open now")
+ time.sleep(5)
+ elif 'open gmail' in audio:
+ webbrowser.open_new_tab("gmail.com")
+ speak("Google Mail open now")
+ time.sleep(5)
+elif 'news' in audio:
+ news = webbrowser.open_new_tab("https://timesofindia.indiatimes.com/home/headlines")
+ speak('Here are some headlines from the Times of India')
+ time.sleep(6)
+ elif "exit" in audio:
+ speak("Thank you, Bye")
+ return "exit"
+ elif "convert" in audio:
+ if "binary" or "octal" or "hexadecimal" in audio:
+ digit(audio)
+ if "centimeter" or "centimeters" or "inch" or "inches" or "meter" or "metres" or "kilometer" or 
+"kilometers" or "millimeter" or "millimeters" or "cm" or "m" in audio:
+ length(audio)
+ 
+ elif "shutdown" in audio:
+ speak("Ok , your pc will shut down in 10 seconds make sure you exit from all applications")
+ os.system("shutdown /s /t 1")
+ elif "search" in audio:
+ webbrowser.open_new_tab(audio)
+ time.sleep(5)
+ 
+time.sleep(1)
+wish()
+while 1:
+ audio_text=audio_()
+ if audio_text!="None":
+ if respond(audio_text)=="exit":
+ break
+ if "hello" in audio:
